@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+    <appender name="RollingAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="{{role_zeenea_log_path}}/server.log"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p %t %c - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="AuditRollingAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="{{role_zeenea_log_path}}/audit.log"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="RequestRollingAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="{{role_zeenea_log_path}}/request.log"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="uiAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="{{role_zeenea_log_path}}/ui.log"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p %X{currentUserLogin} (%X{currentUserProfile}) - %m%n"/>
+        </layout>
+    </appender>
+
+    <logger name="zeenea.ui.client" additivity="false">
+        <level value="error"/>
+        <appender-ref ref="uiAppender"/>
+    </logger>
+
+    <logger name="org.apache.solr">
+        <level value="warn"/>
+        <appender-ref ref="RollingAppender"/>
+    </logger>
+
+    <logger name="zeenea.datacatalog.event.EventLogger">
+        <level value="info"/>
+        <appender-ref ref="AuditRollingAppender"/>
+    </logger>
+
+    <logger name="com.zeenea.server.RequestLog" additivity="false">
+        <level value="info"/>
+        <appender-ref ref="RequestRollingAppender"/>
+    </logger>
+
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="RollingAppender"/>
+    </root>
+
+</log4j:configuration>
+

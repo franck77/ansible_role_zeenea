@@ -1,0 +1,26 @@
+---
+
+- name: "restart zeenea"
+  become: "true"
+  systemd:
+    name: "zeenea"
+    enabled: "yes"
+    state: "restarted"
+    daemon_reload: "yes"
+
+- name: "start zeenea"
+  become: "true"
+  systemd:
+    name: "zeenea"
+    enabled: "yes"
+    state: "started"
+    daemon_reload: "yes"
+
+- name: "stop zeenea"
+  become: "true"
+  systemd:
+    name: "zeenea"
+    enabled: "yes"
+    state: "stopped"
+    daemon_reload: "yes"
+

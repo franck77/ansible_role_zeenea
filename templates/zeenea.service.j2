@@ -1,0 +1,15 @@
+[Unit]
+Description= DATACATALOG ZEENEA
+After=network.target
+
+[Service]
+Type=forking
+User={{ role_zeenea_owner }}
+Group={{ role_zeenea_group }}
+LimitNOFILE={{ role_zeenea_nofile_hard_limit }}
+ExecStart={{ role_zeenea_exploitation_path_bin }}/{{ role_zeenea_exploitation_script_exe_zeenea }} start 
+ExecStop={{ role_zeenea_exploitation_path_bin }}/{{ role_zeenea_exploitation_script_exe_zeenea }} stop 
+
+[Install]
+WantedBy=multi-user.target
+

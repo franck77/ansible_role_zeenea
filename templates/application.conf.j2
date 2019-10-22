@@ -1,0 +1,333 @@
+########################################################
+################### ZEENEA SETTINGS ####################
+########################################################
+
+################# Paths Configuration ################
+zeenea {
+  config = {{ role_zeenea_config_path }}
+  data = {{ role_zeenea_data_path }}
+}
+
+###################### Server ##########################
+
+server {
+  http {
+    enable = {{role_zeenea_server_http_enable}}
+    port = {{role_zeenea_server_http_port}}
+  }
+  https {
+    enable = {{role_zeenea_server_https_enable}}
+  }
+  http2 {
+    enable =  {{role_zeenea_server_http2_enable}}
+  }
+  tls {
+    port = {{role_zeenea_server_tls_port}}
+    renegotiationAllowed = {{role_zeenea_server_tls_renegotiationAllowed}}
+    keyManagerPassword = "{{role_zeenea_server_tls_keyManagerPassword}}"
+    keystore {
+      # Store type can be pkcs12 ou jks
+      type = {{role_zeenea_server_tls_keystore_type}}
+      path = {{role_zeenea_server_tls_keystore_path}}
+      # Use command zeenea-pwd to obfuscate the password
+      password = "{{role_zeenea_server_tls_keystore_password}}"
+    }
+  }
+  log {
+    enable = {{role_zeenea_server_log_enable}}
+
+    # Format of the line, can be ncsa, extended ncsa or a custom format as defined in
+    # https://www.eclipse.org/jetty/javadoc/9.4.15.v20190215/org/eclipse/jetty/server/CustomRequestLog.html
+    format = {{role_zeenea_server_log_format}}
+  }
+}
+
+################## Authentication ######################
+
+authentication {
+  # list of authentication realms (local | ldap) ordered by priority order
+  realms = {{role_zeenea_authentication_realms}} 
+
+  local {
+    # Create default local user as database creation
+    defaultUser = {
+      enable = {{role_zeenea_authentication_local_defaultUser_enable}}
+      login = {{role_zeenea_authentication_local_defaultUser_login}}
+      password = {{role_zeenea_authentication_local_defaultUser_password}}
+    }
+
+    password {
+      # password hash algorithm bcrypt (recommended) | plain
+      algorithm = {{role_zeenea_authentication_local_password_algorithm}}
+      bcrypt {
+        # number of rounds for bcrypt
+        rounds = {{role_zeenea_authentication_local_password_bcrypt_rounds}}
+      }
+    }
+  }
+
+  ldap {
+    host = {{role_zeenea_authentication_ldap_host}}
+    port = {{role_zeenea_authentication_ldap_port}}
+    bind-dn = "{{role_zeenea_authentication_ldap_bind_dn}}"
+    # Use command zeenea-pwd to obfuscate the password
+    bind-password = "{{role_zeenea_authentication_ldap_bind_password}}"
+
+    tls {
+      enable = {{role_zeenea_authentication_ldap_tls_enable}}
+      # minimum protocol version (TLSv1, TLSv1.1 or TLSv1.2)
+      protocol = {{role_zeenea_authentication_ldap_tls_protocol}}
+
+      # What to trust all, valid, trusted
+      trust = {{role_zeenea_authentication_ldap_tls_trust}}
+      truststore {
+        # Store type can be pkcs12 ou jks
+        type = {{role_zeenea_authentication_ldap_tls_trutstore_type}}
+        path = {{role_zeenea_authentication_ldap_tls_trutstore_path}}
+        # Use command zeenea-pwd to obfuscate the password
+        password = "{{role_zeenea_authentication_ldap_tls_trutstore_password}}"
+      }
+    }
+
+    # Base DN for every search (user and group)
+    base-dn = "{{role_zeenea_authentication_ldap_base_dn}}"
+
+    #
+    # User Information
+    #
+
+    # Fill this fields or use on of the above examples
+    user {
+      filter = "{{role_zeenea_authentication_ldap_user_filter}}"
+      uid = {{role_zeenea_authentication_ldap_user_uid}}
+      firstname = {{role_zeenea_authentication_ldap_user_firstname}} 
+      lastname = {{role_zeenea_authentication_ldap_user_lastname}}
+
+      # Optionnal fields
+      mail = {{role_zeenea_authentication_ldap_user_mail}}
+      phone = {{role_zeenea_authentication_ldap_user_phone}}
+    }
+
+    # Active Directory
+    # user {
+    #   filter = "sAMAccountName={USERID}"
+    #   uid = sAMAccountName
+    #   firstname = givenName
+    #   lastname = sn
+    #   mail = mail
+    #   phone = telephoneNumber
+    # }
+
+    # Open LDAP
+    # user {
+    #   filter = "uid={USERID}"
+    #   uid = uid
+    #   firstname = givenName
+    #   lastname = sn
+    #   mail = mail
+    #   phone = telephoneNumber
+    # }
+
+    #
+    # User Profile
+    #
+    profile {
+      # Profil given to authenticated user with no matching group or matching group is disabled
+      # Can be: superadmin, admin, user or forbidden
+      # If forbidden the user access will be refused
+      default = {{role_zeenea_authentication_ldap_profile_default}}
+
+      group {
+        # Enable ldap group mapping setting, if disable, only default profile will be set.
+        enable = {{role_zeenea_authentication_ldap_profile_group_enable}}
+
+      # The query that allow to search user groups
+      # Use variable {USERDN} or {USERID} to identify user
+        filter = "{{role_zeenea_authentication_ldap_profile_group_filter}}"
+
+        matching-attribute = "{{role_zeenea_authentication_ldap_profile_group_matching_attribute}}"
+
+        # List of groups that give access to given profil (DN or matching-attribute value)
+        superadmin = ["{{ role_zeenea_authentication_ldap_profile_group_superadmin }}"]
+        admin = ["{{ role_zeenea_authentication_ldap_profile_group_admin }}"]
+        user = ["{{ role_zeenea_authentication_ldap_profile_group_user }}"]
+      }
+    }
+
+  }
+}
+
+############### Encryption Configuration ###############
+security {
+  strong = {{role_zeenea_security_strong}}
+
+  keystore {
+    # Store type can be pkcs12 ou jks
+    type = {{role_zeenea_security_keystore_type}}
+    path = {{role_zeenea_security_keystore_path}}
+    # Use command zeenea-pwd to obfuscate the password
+    password = "{{role_zeenea_security_keystore_password}}"
+  }
+
+  # Protection of Properties of type Password
+  data {
+    enable = {{role_zeenea_security_data_enable}}
+    alias = {{role_zeenea_security_data_alias}}
+    # Use command zeenea-pwd to obfuscate the password
+    password = "{{role_zeenea_security_data_password}}"
+  }
+
+  # Protection of JWT session tokens
+  jwt {
+    alias = {{role_zeenea_security_jwt_alias}}
+    # Use command zeenea-pwd to obfuscate the password
+    password = "{{role_zeenea_security_jwt_password}}"
+    issuer = {{role_zeenea_security_jwt_issuer}}
+
+    # Signature algorithm.
+    # Supported values:
+    #   - HS224, HmacSHA224, 1.2.840.113549.2.8
+    #   - HS256, HmacSHA256, 1.2.840.113549.2.9
+    #   - HS384, HmacSHA384, 1.2.840.113549.2.10
+    #   - HS512, HmacSHA512, 1.2.840.113549.2.11
+    algo = {{role_zeenea_security_jwt_algo}}
+
+    # JWT Token Time To Live
+    # As a duration in ISO-8601 format
+    # Examples:
+    #   - P1D: 1 Day (24 hours exactly)
+    #   - P2DT6H5M15S: 2 days, 6 hours 5 minutes and 15 seconds
+    ttl = {{role_zeenea_security_jwt_ttl}}
+  }
+}
+
+################ OrientDB Configuration ################
+orientdb {
+  connection {
+    engine = {{role_zeenea_orientdb_connection_engine}}
+    dataPath = {{role_zeenea_orientdb_connection_dataPath}}
+    databaseName = {{role_zeenea_orientdb_connection_databaseName}}
+    username = {{role_zeenea_orientdb_connection_username}}
+    # Use command zeenea-pwd to obfuscate the password
+    password = "{{role_zeenea_orientdb_connection_password}}"
+  }
+}
+
+
+######################## Backup ########################
+# Cron expression (http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
+backup {
+  enable = {{role_zeenea_backup_enable}}
+  cron = "{{role_zeenea_backup_cron}}"
+  path = {{role_zeenea_backup_path}}
+  prefix = {{role_zeenea_backup_prefix}}
+  cleanup {
+    enable = {{role_zeenea_backup_cleanup_enable}}
+    cron = "{{role_zeenea_backup_cleanup_cron}}"
+    # interval = 5 # days
+    max-backups = {{role_zeenea_backup_cleanup_max_backups}}
+  }
+}
+
+################## Solr Configuration ##################
+solr {
+  connection {
+    home = {{role_zeenea_solr_connection_home}}
+    corePath = {{role_zeenea_solr_connection_corePath}}
+  }
+  search-engine {
+    categories {
+      fuzzy.distance = {{role_zeenea_solr_search_engine_categories_fuzzy_distance}}
+      fields {
+        categoryName {
+          enable = {{role_zeenea_solr_search_engine_categories_fields_categoryName_enable}}
+          boost = {{role_zeenea_solr_search_engine_categories_fields_categoryName_boost}}
+        }
+        description {
+          enable = {{role_zeenea_solr_search_engine_categories_fields_description_enable}}
+          boost = {{role_zeenea_solr_search_engine_categories_fields_description_boost}}
+        }
+        tags {
+          enable = {{role_zeenea_solr_search_engine_categories_fields_tags_enable}}
+          boost = {{role_zeenea_solr_search_engine_categories_fields_tags_boost}}
+        }
+      }
+    }
+    datasets {
+      fuzzy.distance = {{role_zeenea_solr_search_engine_datasets_fuzzy_distance}} 
+      fields {
+        datasetName {
+          enable = {{role_zeenea_solr_search_engine_datasets_fields_datasetName_enable}}
+          boost = {{role_zeenea_solr_search_engine_datasets_fields_datasetName_boost}}
+        }
+        description {
+          enable = {{role_zeenea_solr_search_engine_datasets_fields_description_enable}}
+          boost = {{role_zeenea_solr_search_engine_datasets_fields_description_boost}}
+        }
+        fieldNameList {
+          enable = {{role_zeenea_solr_search_engine_datasets_fields_fieldNameList_enable}}
+          boost = {{role_zeenea_solr_search_engine_datasets_fields_fieldNameList_boost}}
+        }
+        flattenedFieldTags {
+          enable = {{role_zeenea_solr_search_engine_datasets_fields_flattenedFieldTags_enable}}
+          boost = {{role_zeenea_solr_search_engine_datasets_fields_flattenedFieldTags_boost}}
+        }
+        tags {
+          enable = {{role_zeenea_solr_search_engine_datasets_fields_tags_enable}}
+          boost = {{role_zeenea_solr_search_engine_datasets_fields_tags_boost}}
+        }
+      }
+    }
+    users {
+      fuzzy.distance = {{role_zeenea_solr_search_engine_users_fuzzy_distance}}
+      fields {
+        login {
+          enable = {{role_zeenea_solr_search_engine_users_fields_login_enable}}
+          boost = {{role_zeenea_solr_search_engine_users_fields_login_boost}}
+        }
+        firstname {
+          enable = {{role_zeenea_solr_search_engine_users_fields_firstname_enable}}
+          boost = {{role_zeenea_solr_search_engine_users_fields_firstname_boost}}
+        }
+        lastname {
+          enable = {{role_zeenea_solr_search_engine_users_fields_lastname_enable}}
+          boost = {{role_zeenea_solr_search_engine_users_fields_lastname_boost}}
+        }
+        email {
+          enable = {{role_zeenea_solr_search_engine_users_fields_email_enable}}
+          boost = {{role_zeenea_solr_search_engine_users_fields_email_boost}}
+        }
+      }
+    }
+  }
+
+  suggester {
+    asset {
+      enable = {{role_zeenea_solr_search_engine_suggester_asset_enable}}
+      cron = "{{role_zeenea_solr_search_engine_suggester_asset_cron}}"
+    }
+    dataset {
+      enable = {{role_zeenea_solr_search_engine_suggester_dataset_enable}}
+      cron = "{{role_zeenea_solr_search_engine_suggester_dataset_cron}}"
+    }
+    category {
+      enable = {{role_zeenea_solr_search_engine_suggester_category_enable}}
+      cron = "{{role_zeenea_solr_search_engine_suggester_category_cron}}"
+    }
+  }
+}
+
+###################### Automation ######################
+# Cron expression (http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
+automation {
+  CreateProfiling {
+    enable = {{role_zeenea_automation_CreateProfiling_enable}}
+    cron = "{{role_zeenea_automation_CreateProfiling_cron}}"
+  }
+  UpdateSchema {
+    enable = {{role_zeenea_automation_UpdateSchema_enable}}
+    cron = "{{role_zeenea_automation_UpdateSchema_cron}}"
+  }
+}
+
+

@@ -1,0 +1,121 @@
+################################################ Ownership & Mode  variables ###############################
+
+role_zeenea_owner: "zeenea"
+role_zeenea_group: "{{ role_zeenea_owner }}"
+role_zeenea_user_default_shell: "/bin/bash"
+role_zeenea_mode_home_dir: "0700"
+role_zeenea_mode_exec: "0755"
+role_zeenea_mode_install_dir: "{{ role_zeenea_mode_exec }}"
+
+################################################ logs ####################################
+
+role_zeenea_log_path: "/var/log/zeenea" 
+
+############################################# service otpion #############################
+
+role_zeenea_service_path: "/etc/systemd/system"
+role_zeenea_service_name: "zeenea.service"
+
+role_zeenea_path_limit: "/etc/security/limits.d/zeenea.conf"
+role_zeenea_nofile_soft_limit: "262144"
+role_zeenea_nofile_hard_limit: "524288"
+
+############################################## Zeena conf variables  ############################################
+
+######### Paths Configuration ########
+
+role_zeenea_config_path: "{{ role_zeenea_install_dir }}/conf"
+role_zeenea_log4j_xml:  "{{ role_zeenea_config_path }}/log4j.xml"
+role_zeenea_datacruncher_script: "{{ role_zeenea_config_path }}/datacruncher-env.sh"
+role_zeenea_application_conf_path: "{{ role_zeenea_config_path }}/application.conf"
+role_zeenea_data_path: "{{ role_zeenea_install_dir }}/data"
+role_zeenea_bin_path: "{{ role_zeenea_install_dir }}/bin"
+role_zeenea_start_script_editor_path: "{{ role_zeenea_bin_path }}/zeenea-datacatalog"
+
+###################### Server ##########################
+
+role_zeenea_server_http_enable: "false"
+role_zeenea_server_http_port: "8080"
+role_zeenea_server_https_enable: "true"
+role_zeenea_server_http2_enable: "false"
+role_zeenea_server_tls_renegotiationAllowed: "false"
+role_zeenea_server_tls_keystore_type: "jks"
+role_zeenea_server_log_enable: "false"
+role_zeenea_server_log_format: "ncsa"
+
+################## Authentication ######################
+
+role_zeenea_authentication_realms: "[ldap]"
+role_zeenea_authentication_local_defaultUser_enable: "false"
+role_zeenea_authentication_local_defaultUser_login: "zeenea"
+role_zeenea_authentication_local_defaultUser_password: "zeenea"
+role_zeenea_authentication_local_password_algorithm: "bcrypt"
+role_zeenea_authentication_local_password_bcrypt_rounds: "12"
+
+role_zeenea_authentication_ldap_tls_enable: "true"
+
+# minimum protocol version (TLSv1, TLSv1.1 or TLSv1.2)
+role_zeenea_authentication_ldap_tls_protocol: "TLSv1"
+
+# What to trust all, valid, trusted
+
+role_zeenea_authentication_ldap_tls_trust: "trusted"
+role_zeenea_authentication_ldap_tls_trutstore_type: "jks"
+role_zeenea_authentication_ldap_base_dn: "dc=haas,dc=socgen"
+
+role_zeenea_authentication_ldap_user_filter: "(&(objectclass=posixAccount)(uid={USERID}))"
+role_zeenea_authentication_ldap_user_uid: "uid"
+role_zeenea_authentication_ldap_user_firstname: "givenName"
+role_zeenea_authentication_ldap_user_lastname: "sn"
+
+# Profil given to authenticated user with no matching group or matching group is disabled
+# Can be: superadmin, admin, user or forbidden
+# If forbidden the user access will be refused
+
+role_zeenea_authentication_ldap_profile_default: "forbidden"
+role_zeenea_authentication_ldap_profile_group_enable: "true"
+role_zeenea_authentication_ldap_profile_group_filter: "(&(objectClass=posixGroup)(memberUid={USERID}))"
+role_zeenea_authentication_ldap_profile_group_matching_attribute: "DN"
+
+### Exploitation
+
+role_zeenea_exploitation_path: "{{ role_zeenea_home_dir }}/scripts"
+role_zeenea_exploitation_path_bin: "{{ role_zeenea_exploitation_path }}/bin"
+role_zeenea_exploitation_script_exe_zeenea: "zeenea.sh"
+
+############### Encryption Configuration ###############
+
+role_zeenea_security_strong: "true"
+role_zeenea_security_keystore_type: "pkcs12"
+role_zeenea_security_keystore_path: "${zeenea.data}/key.pkcs12"
+# Protection of Properties of type Password
+role_zeenea_security_data_enable: "true"
+role_zeenea_security_data_alias: "zeenea.data"
+# Protection of JWT session tokens
+role_zeenea_security_jwt_alias: "zeenea.jwt"
+role_zeenea_security_jwt_issuer: "Zeenea DataCatalog"
+
+# Signature algorithm.
+    # Supported values:
+    #   - HS224, HmacSHA224, 1.2.840.113549.2.8
+    #   - HS256, HmacSHA256, 1.2.840.113549.2.9
+    #   - HS384, HmacSHA384, 1.2.840.113549.2.10
+    #   - HS512, HmacSHA512, 1.2.840.113549.2.11
+role_zeenea_security_jwt_algo: "HS512"
+
+# JWT Token Time To Live
+    # As a duration in ISO-8601 format
+    # Examples:
+    #   - P1D: 1 Day (24 hours exactly)
+    #   - P2DT6H5M15S: 2 days, 6 hours 5 minutes and 15 seconds
+role_zeenea_security_jwt_ttl: "PT10H"
+
+################ OrientDB Configuration ################
+role_zeenea_orientdb_connection_engine: "plocal"
+role_zeenea_orientdb_connection_dataPath: "${zeenea.data}/orientdb"
+role_zeenea_orientdb_connection_databaseName: "datacatalog"
+role_zeenea_orientdb_connection_username: "zeenea"
+
+################## Solr Configuration ##################
+role_zeenea_solr_connection_home: "${zeenea.home}/search-engine"
+role_zeenea_solr_connection_corePath: "${zeenea.data}/search-engine-data"

@@ -1,0 +1,32 @@
+---
+
+- name: "Removing zeenea application {{ role_zeenea_install_dir }}, if installed"
+  become: "true"
+  file:
+    path: "{{ role_zeenea_install_dir }}"
+    state: "absent"
+
+- name: "Removing zeenea service {{role_zeenea_service_path}}/{{role_zeenea_service_path}}, if installed"
+  become: "true"
+  file:
+    path: "{{ role_zeenea_service_path }}/{{ role_zeenea_service_name }}"
+    state: "absent"
+
+- name: "Remove exploitation path is created"
+  become: "true"
+  file:
+    path: "{{ role_zeenea_exploitation_path }}"
+    state: "absent"
+
+- name: "Remove nb open file limit for zeenea user"
+  become: "true"
+  file:
+    path: "{{ role_zeenea_path_limit }}"
+    state: "absent"
+
+- name: "Remove log directory"
+  become: "true"
+  file:
+    path: "{{ role_zeenea_log_path }}"
+    state: "absent"
+

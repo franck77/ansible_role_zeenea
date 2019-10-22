@@ -1,0 +1,139 @@
+
+- name:  Check that input variables are well transmited
+  assert: { that: "{{ item }} is defined" }
+  with_items:
+    - role_zeenea_data_path
+    - role_zeenea_config_path
+    - role_zeenea_zeenea_version
+    - role_zeenea_server_tls_keystore_path
+    - role_zeenea_authentication_realms
+    - role_zeenea_authentication_ldap_host
+    - role_zeenea_authentication_ldap_port
+    - role_zeenea_authentication_ldap_bind_dn
+    - role_zeenea_authentication_ldap_bind_password 
+    - role_zeenea_authentication_ldap_tls_enable
+    - role_zeenea_authentication_ldap_tls_protocol
+    - role_zeenea_authentication_ldap_tls_trust
+    - role_zeenea_authentication_ldap_tls_trutstore_type
+    - role_zeenea_authentication_ldap_tls_trutstore_path
+    - role_zeenea_authentication_ldap_tls_trutstore_password
+    - role_zeenea_authentication_ldap_base_dn
+    - role_zeenea_authentication_ldap_user_filter
+    - role_zeenea_authentication_ldap_user_uid
+    - role_zeenea_authentication_ldap_user_firstname
+    - role_zeenea_authentication_ldap_user_lastname
+    - role_zeenea_authentication_ldap_user_mail
+    - role_zeenea_authentication_ldap_user_phone
+    - role_zeenea_authentication_ldap_profile_group_superadmin
+    - role_zeenea_authentication_ldap_profile_group_admin
+    - role_zeenea_authentication_ldap_profile_group_user
+    - role_zeenea_authentication_local_password_algorithm
+    - role_zeenea_authentication_local_password_bcrypt_rounds  
+    - role_zeenea_security_strong
+    - role_zeenea_security_keystore_type
+    - role_zeenea_security_keystore_path
+    - role_zeenea_security_keystore_password
+    - role_zeenea_security_data_enable
+    - role_zeenea_security_data_alias
+    - role_zeenea_security_data_password
+    - role_zeenea_security_jwt_alias
+    - role_zeenea_security_jwt_password
+    - role_zeenea_security_jwt_issuer
+    - role_zeenea_security_jwt_algo
+    - role_zeenea_security_jwt_ttl
+    - role_zeenea_orientdb_connection_engine
+    - role_zeenea_orientdb_connection_dataPath
+    - role_zeenea_orientdb_connection_databaseName 
+    - role_zeenea_orientdb_connection_username
+    - role_zeenea_orientdb_connection_password
+    - role_zeenea_service_path
+    - role_zeenea_service_name
+    - role_zeenea_datacruncher_script
+    - role_zeenea_application_conf_path
+    - role_zeenea_exploitation_path_bin
+    - role_zeenea_exploitation_script_exe_zeenea
+    - role_zeenea_log4j_xml
+
+- name: "Deploying application.conf"
+  become: "yes"
+  become_user: "{{ role_zeenea_owner }}"
+  template: 
+    src: "application.conf.j2"  
+    dest: "{{ role_zeenea_application_conf_path }}"  
+    owner: "{{ role_zeenea_owner }}"
+    mode: "0755" 
+    group: "{{ role_zeenea_group }}"
+  notify:
+   - restart zeenea
+
+- name: "Deploying datacruncher-env.sh"
+  become: "yes"
+  become_user: "{{ role_zeenea_owner }}"
+  template: 
+    src: "datacruncher-env.sh.j2"  
+    dest: "{{ role_zeenea_datacruncher_script }}"  
+    owner: "{{ role_zeenea_owner }}" 
+    mode: "0755"
+    group: "{{ role_zeenea_group }}"
+  notify:
+   - restart zeenea
+
+- name: "Deploying log4j.xml"
+  become: "yes"
+  become_user: "{{ role_zeenea_owner }}"
+  template:
+    src: "log4j.xml.j2"
+    dest: "{{ role_zeenea_log4j_xml }}"
+    owner: "{{ role_zeenea_owner }}"
+    mode: "755"
+    group: "{{ role_zeenea_group }}"
+  notify:
+   - restart zeenea
+
+### Exploitation
+
+- name: "Assure exploitation path is created"
+  become: "yes"
+  become_user: "{{ role_zeenea_owner }}"
+  file:
+    path: "{{ role_zeenea_exploitation_path }}"
+    state: "directory"
+    owner: "{{ role_zeenea_owner }}"
+    group: "{{ role_zeenea_group }}"
+    mode: "755"
+
+- name: "Assure bin path for exploitation is created"
+  become: "yes"
+  become_user: "{{ role_zeenea_owner }}"
+  file:
+    path: "{{ role_zeenea_exploitation_path_bin }}"
+    state: "directory"
+    owner: "{{ role_zeenea_owner }}"
+    group: "{{ role_zeenea_group }}"
+    mode: "755"
+
+- name: "Create log directory {{ role_zeenea_log_path }} for zeenea"
+  become: "true"
+  file:
+    path: "{{ role_zeenea_log_path }}"
+    state: "directory"
+    owner: "{{ role_zeenea_owner }}"
+    group: "{{ role_zeenea_group }}"
+    mode: "755"
+
+- name: "Deploying managing script for start/stop/restart"
+  become: "yes"
+  become_user: "{{ role_zeenea_owner }}"
+  template: 
+    src: "zeenea.sh.j2"  
+    dest: "{{ role_zeenea_exploitation_path_bin }}/{{ role_zeenea_exploitation_script_exe_zeenea }}" 
+    owner: "{{ role_zeenea_owner }}" 
+    mode: "755"
+    group: "{{ role_zeenea_group }}"
+
+- name: "Deploy systemctl for Zeenea"
+  become: "true"
+  template: 
+    src: "zeenea.service.j2"  
+    dest: "{{ role_zeenea_service_path }}/{{ role_zeenea_service_name }}"
+

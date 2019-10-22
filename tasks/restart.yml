@@ -1,0 +1,10 @@
+---
+
+- name: "restart zeenea"
+  become: "true"
+  systemd:
+    name: "zeenea"
+    enabled: "yes"
+    state: "restarted"
+    daemon_reload: "yes"
+

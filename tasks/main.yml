@@ -1,0 +1,28 @@
+---
+- name: "Installing Zeenea ..."
+  include: "install.yml"
+  when: state in ["role_zeenea_install", "role_zeenea_whole_install"]
+
+- name: "Config Zeenea ..."
+  include: "configure.yml"
+  when: state in ["role_zeenea_config", "role_zeenea_whole_install"]
+
+- name: "Upgrade Zeenea ..."
+  include: "upgrade.yml"
+  when: state in ["role_zeenea_upgrade"]
+
+- name: "Starting Zeenea ..."
+  include: "start.yml"
+  when: state in ["role_zeenea_start"]
+
+- name: "Stop Zeenea ..."
+  include: "stop.yml"
+  when: state in ["role_zeenea_stop", "role_zeenea_whole_remove"]
+
+- name: "Remove Zeenea ..."
+  include: "remove.yml"
+  when: state in ["role_zeenea_remove", "role_zeenea_whole_remove"]
+
+- name: "Restart Zeenea ..."
+  include: "restart.yml"
+  when: state in ["role_zeenea_restart"]

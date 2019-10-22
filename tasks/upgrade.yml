@@ -1,0 +1,31 @@
+---
+- name:  "Check that input variables are well transmited for upgrade Zeenea"
+  assert: { that: "{{ item }} is defined" }
+  with_items:
+    - role_zeenea_zeenea_old_version
+    - role_zeenea_install_dir
+    - role_zeenea_owner
+    - role_zeenea_group
+    - role_zeenea_tarball_path
+
+- name: "Install new Zeenea release ..."
+  include: "install.yml"
+
+- name: "Stop Zeenea ..."
+  become: "true"
+  systemd:
+    name: "zeenea"
+    enabled: "yes"
+    state: "stopped"
+    daemon_reload: "yes"
+  when: check_dir_zeenea.stat.exists == False
+
+- name: "Recopie des data"
+  become: "true"
+  shell: "cp -rp /applis/zeenea/{{ role_zeenea_zeenea_old_version }}/data {{ role_zeenea_install_dir }}/"
+  when: check_dir_zeenea.stat.exists == False
+
+- name: "Config Zeenea ..."
+  include: "configure.yml"
+  when: check_dir_zeenea.stat.exists == False
+

@@ -1,0 +1,58 @@
+
+- name:  "Check that input variables are well transmited"
+  assert: { that: "{{ item }} is defined" }
+  with_items:
+    - role_zeenea_install_dir
+    - role_zeenea_owner
+    - role_zeenea_group
+    - role_zeenea_user_default_shell
+    - role_zeenea_home_dir
+    - role_zeenea_tarball_name
+    - role_zeenea_mode_install_dir
+
+- name: "Verifiy home directory with good right and owner"
+  become: "true"
+  file:
+    path: "{{ role_zeenea_home_dir }}"
+    state: "directory"
+    owner: "{{ role_zeenea_owner }}"
+    mode: "{{ role_zeenea_mode_home_dir }}"
+    group: "{{ role_zeenea_group }}"
+
+- name: "Check if Zeenea is already installed"
+  become_user: "{{ role_zeenea_owner }}"
+  become: "yes"
+  stat:
+    path: "{{ role_zeenea_install_dir }}"
+  register: "check_dir_zeenea"
+
+- name: "Creating install directory with good right and owner"
+  become: "true"
+  file: 
+    path: "{{ role_zeenea_install_dir }}" 
+    state: "directory"  
+    owner: "{{ role_zeenea_owner }}" 
+    mode: "{{ role_zeenea_mode_install_dir }}" 
+    group: "{{ role_zeenea_group }}"
+    recurse: "yes"
+
+- name: "Unarchive a file that needs to be downloaded"
+  become: "true"
+  unarchive:
+    src: "{{ role_zeenea_tarball_path }}"
+    dest: "{{ role_zeenea_install_dir }}"
+    owner: "{{ role_zeenea_owner }}"
+    group: "{{ role_zeenea_group }}"
+    extra_opts: [--strip-components=1]
+    remote_src: yes
+  when: check_dir_zeenea.stat.exists == False
+
+- name: "Set open file file for zeenea user"
+  become: "true"
+  template:
+    src: "zeenea.conf.j2"
+    dest: "{{ role_zeenea_path_limit }}"
+    owner: "root"
+    mode: "644"
+    group: "root"
+

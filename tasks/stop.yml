@@ -1,0 +1,10 @@
+---
+
+- name: "stop zeenea"
+  become: "true"
+  systemd:
+    name: "zeenea"
+    enabled: "yes"
+    state: "stopped"
+    daemon_reload: "yes"
+

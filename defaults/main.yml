@@ -1,0 +1,204 @@
+
+################################################ Ownership & Mode  variables ###############################
+
+role_zeenea_owner: "zeenea"
+role_zeenea_group: "{{ role_zeenea_owner }}"
+role_zeenea_uid: "49000001"
+role_zeenea_gid: "{{ role_zeenea_uid }}"
+role_zeenea_user_default_shell: "/bin/bash"
+role_zeenea_home_dir: "/applis/hadd/produits/zeenea"
+
+role_zeenea_users:
+  - {
+     name: "{{ role_zeenea_owner }}",
+     uid: "{{ role_zeenea_uid }}",
+     group: "{{ role_zeenea_group }}",
+     groups: "{{ role_zeenea_group }}"
+    }
+
+role_zeenea_groups:
+  - {
+     name: "{{ role_zeenea_group }}",
+     guid: "{{ role_zeenea_gid }}"
+    }
+
+############################################# service otpion #############################
+
+role_zeenea_service_path: "/etc/systemd/system"
+role_zeenea_service_name: "zeenea.service"
+role_zeenea_path_limit: "/etc/security/limits.d/zeenea.conf"
+role_zeenea_nofile_soft_limit: "262144"
+role_zeenea_nofile_hard_limit: "524288"
+
+################################################ Java_home  ###############################
+
+role_zeenea_java_path: "/applis/hadd/produits/java8/jdk1.8.0_112"
+
+############################################## Path variables ############################################
+
+role_zeenea_install_dir: "{{ role_zeenea_home_dir }}/{{ role_zeenea_zeenea_version }}"
+role_zeenea_repo_host: "dhadlx04.dns21.socgen"
+role_zeenea_tarball_path: "http://{{ role_zeenea_repo_host }}/resources/binaries/zeenea/{{ role_zeenea_tarball_name }}"
+role_zeenea_zeenea_version: "19.04.1"
+role_zeenea_tarball_name: "zeenea-datacatalog-{{ role_zeenea_zeenea_version }}.tar.gz"
+role_zeenea_bin_path: "{{ role_zeenea_install_dir }}/bin"
+role_zeenea_start_script_editor_path: "{{ role_zeenea_bin_path }}/zeenea-datacatalog"
+role_zeenea_log_path: "/var/log/zeenea"
+
+############################################## Zeena conf variables  ############################################
+
+######### Paths Configuration ########
+
+role_zeenea_config_path: "{{ role_zeenea_install_dir }}/conf"
+role_zeenea_datacruncher_script: "{{ role_zeenea_config_path }}/datacruncher-env.sh"
+role_zeenea_application_conf_path: "{{ role_zeenea_config_path }}/application.conf"
+role_zeenea_data_path: "{{ role_zeenea_install_dir }}/data"
+
+###################### Server ##########################
+
+role_zeenea_server_http_enable: "false"
+role_zeenea_server_http_port: "8080"
+role_zeenea_server_https_enable: "true"
+role_zeenea_server_http2_enable: "false"
+role_zeenea_server_tls_port: "8443" 
+role_zeenea_server_tls_renegotiationAllowed: "false"
+role_zeenea_server_tls_keystore_type: "jks"
+role_zeenea_server_tls_keystore_path: "{{role_zeenea_install_dir}}/{{role_zeenea_zeenea_version}}/tls/{{role_zeenea_security_jks_keystore_name}}"
+role_zeenea_server_log_enable: "false"
+role_zeenea_server_log_format: "ncsa"
+
+################## Authentication ######################
+
+# authentication realms local | ldap
+role_zeenea_authentication_realms: "[ldap]"
+
+role_zeenea_authentication_local_defaultUser_enable: "false"
+role_zeenea_authentication_local_defaultUser_login: "zeenea"
+role_zeenea_authentication_local_password_algorithm: "bcrypt"
+role_zeenea_authentication_local_password_bcrypt_rounds: "12"
+
+role_zeenea_authentication_ldap_bind_dn: "cn=bindzeenea,ou=Services,dc=haas,dc=socgen"
+
+role_zeenea_authentication_ldap_tls_enable: "true"
+
+# minimum protocol version (TLSv1, TLSv1.1 or TLSv1.2)
+role_zeenea_authentication_ldap_tls_protocol: "TLSv1"
+
+# What to trust all, valid, trusted
+
+role_zeenea_authentication_ldap_tls_trust: "trusted" 
+role_zeenea_authentication_ldap_tls_trutstore_type: "jks"
+role_zeenea_authentication_ldap_tls_trutstore_path: "{{role_zeenea_install_dir}}/{{role_zeenea_zeenea_version}}/tls/{{role_zeenea_security_jks_truststore_name}}"
+role_zeenea_authentication_ldap_base_dn: "dc=haas,dc=socgen"
+#
+# User Information
+#  
+role_zeenea_authentication_ldap_user_filter: "(&(objectclass=posixAccount)(uid={USERID}))"
+role_zeenea_authentication_ldap_user_uid: "uid"
+role_zeenea_authentication_ldap_user_firstname: "givenName"
+role_zeenea_authentication_ldap_user_lastname: "sn"
+# optional 
+role_zeenea_authentication_ldap_user_mail: "mail"
+role_zeenea_authentication_ldap_user_phone: "phone" 
+
+# Profil given to authenticated user with no matching group or matching group is disabled
+# Can be: superadmin, admin, user or forbidden
+# If forbidden the user access will be refused
+
+role_zeenea_authentication_ldap_profile_default: "forbidden"
+role_zeenea_authentication_ldap_profile_group_enable: "true"
+role_zeenea_authentication_ldap_profile_group_filter: "(&(objectClass=posixGroup)(memberUid={USERID}))"
+role_zeenea_authentication_ldap_profile_group_matching_attribute: "DN" 
+role_zeenea_authentication_ldap_profile_group_superadmin: '["cn=zeenea_superadmin,ou=Groups,dc=haas,dc=socgen"]'
+role_zeenea_authentication_ldap_profile_group_admin: '["cn=zeenea_admin,ou=Groups,dc=haas,dc=socgen"]'
+role_zeenea_authentication_ldap_profile_group_user: '["cn=zeenea_user,ou=Groups,dc=haas,dc=socgen"]'
+
+############### Encryption Configuration ###############
+role_zeenea_security_strong: "true"
+role_zeenea_security_keystore_type: "pkcs12"
+role_zeenea_security_keystore_path: "${zeenea.data}/key.pkcs12"
+# Protection of Properties of type Password
+role_zeenea_security_data_enable: "true" 
+role_zeenea_security_data_alias: "zeenea.data"
+# Protection of JWT session tokens
+role_zeenea_security_jwt_alias: "zeenea.jwt"
+role_zeenea_security_jwt_issuer: "Zeenea DataCatalog"
+
+# Signature algorithm.
+    # Supported values:
+    #   - HS224, HmacSHA224, 1.2.840.113549.2.8
+    #   - HS256, HmacSHA256, 1.2.840.113549.2.9
+    #   - HS384, HmacSHA384, 1.2.840.113549.2.10
+    #   - HS512, HmacSHA512, 1.2.840.113549.2.11
+role_zeenea_security_jwt_algo: "HS512"
+
+# JWT Token Time To Live
+    # As a duration in ISO-8601 format
+    # Examples:
+    #   - P1D: 1 Day (24 hours exactly)
+    #   - P2DT6H5M15S: 2 days, 6 hours 5 minutes and 15 seconds
+role_zeenea_security_jwt_ttl: "PT10H" 
+
+################ OrientDB Configuration ################
+role_zeenea_orientdb_connection_engine: "plocal"
+role_zeenea_orientdb_connection_dataPath: "${zeenea.data}/orientdb"
+role_zeenea_orientdb_connection_databaseName: "datacatalog"
+role_zeenea_orientdb_connection_username: "zeenea"
+
+######################## Backup ########################
+# Cron expression (http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
+role_zeenea_backup_enable: "true"
+role_zeenea_backup_cron: "0 0 0 * * ?"
+role_zeenea_backup_path: "${zeenea.data}/orientdb_snapshots"
+role_zeenea_backup_prefix: "backup" 
+role_zeenea_backup_cleanup_enable: "true" 
+role_zeenea_backup_cleanup_cron: "0 15 0 * * ?"
+role_zeenea_backup_cleanup_max_backups: "5"
+
+################## Solr Configuration ##################
+role_zeenea_solr_connection_home: "${zeenea.home}/search-engine"
+role_zeenea_solr_connection_corePath: "${zeenea.data}/search-engine-data"
+role_zeenea_solr_search_engine_categories_fuzzy_distance: "0"
+role_zeenea_solr_search_engine_categories_fields_categoryName_enable: "true"
+role_zeenea_solr_search_engine_categories_fields_categoryName_boost: "5"
+role_zeenea_solr_search_engine_categories_fields_description_enable: "true"
+role_zeenea_solr_search_engine_categories_fields_description_boost: "1"
+role_zeenea_solr_search_engine_categories_fields_tags_enable: "true"
+role_zeenea_solr_search_engine_categories_fields_tags_boost: "2"
+role_zeenea_solr_search_engine_datasets_fuzzy_distance: "2"
+role_zeenea_solr_search_engine_datasets_fields_datasetName_enable: "true"
+role_zeenea_solr_search_engine_datasets_fields_datasetName_boost: "5" 
+role_zeenea_solr_search_engine_datasets_fields_description_enable: "true"
+role_zeenea_solr_search_engine_datasets_fields_description_boost: "2"
+role_zeenea_solr_search_engine_datasets_fields_fieldNameList_enable: "true"
+role_zeenea_solr_search_engine_datasets_fields_fieldNameList_boost: "1"
+role_zeenea_solr_search_engine_datasets_fields_flattenedFieldTags_enable: "true"
+role_zeenea_solr_search_engine_datasets_fields_flattenedFieldTags_boost: "1"
+role_zeenea_solr_search_engine_datasets_fields_tags_enable: "true"
+role_zeenea_solr_search_engine_datasets_fields_tags_boost: "2"
+
+role_zeenea_solr_search_engine_users_fuzzy_distance: "2"
+role_zeenea_solr_search_engine_users_fields_login_enable: "true"
+role_zeenea_solr_search_engine_users_fields_login_boost: "5"
+role_zeenea_solr_search_engine_users_fields_firstname_enable: "true"
+role_zeenea_solr_search_engine_users_fields_firstname_boost: "2"
+role_zeenea_solr_search_engine_users_fields_lastname_enable: "true"
+role_zeenea_solr_search_engine_users_fields_lastname_boost: "2"
+role_zeenea_solr_search_engine_users_fields_email_enable: "true"
+role_zeenea_solr_search_engine_users_fields_email_boost: "1"
+role_zeenea_solr_search_engine_suggester_asset_enable: "true"
+role_zeenea_solr_search_engine_suggester_asset_cron: "0 0 * * * ?"
+role_zeenea_solr_search_engine_suggester_dataset_enable: "true"
+role_zeenea_solr_search_engine_suggester_dataset_cron: "0 0 * * * ?"
+role_zeenea_solr_search_engine_suggester_category_enable: "true"
+role_zeenea_solr_search_engine_suggester_category_cron: "0 0 * * * ?"
+###################### Automation ######################
+role_zeenea_automation_CreateProfiling_enable: "true"
+role_zeenea_automation_CreateProfiling_cron: "0 42 0 * * ?"
+role_zeenea_automation_UpdateSchema_enable: "true"
+role_zeenea_automation_UpdateSchema_cron: "0 42 1 * * ?"
+
+
+
+
+

@@ -1,0 +1,77 @@
+#!/bin/bash
+
+ZEENEA_SCRIPT_SH="{{ role_zeenea_start_script_editor_path }}"
+
+PID_Zeenea() {
+    pidZeenea=`ps -ef | grep -v "grep" | grep ' java -Dzeenea.home' | awk '{print $2}'`
+    echo "${pidZeenea}"
+}
+
+
+Status_Zeenea() {
+      pidZeenea=$( PID_Zeenea )
+      if [ "$pidZeenea" ==  "" ]
+      then
+         echo
+         echo "Zeenea Datacatalog is stopped "
+         echo "You can start Zeenea Datacatalog  with the command :  start"
+         echo
+      else
+         echo
+         echo "Zeenea Datacatalog is running"
+         echo "PID Zeenea Datacatalog : $pidZeenea"
+         echo
+     fi
+}
+
+Start_Zeenea(){
+     pidZeenea=$( PID_Zeenea )
+     if [ "$pidZeenea" ==  "" ]
+     then
+       nohup $ZEENEA_SCRIPT_SH >/dev/null 2>&1 &
+       echo
+       echo "Zeenea Datacatalog is starting .... "
+       echo
+      fi
+}
+
+Stop_Zeenea() {
+      pidZeenea=$( PID_Zeenea )
+      if [ "${pidZeenea}" != "" ]
+      then
+         kill ${pidZeenea}
+         echo
+         echo "Zeenea Datacatalog is stopping ... "
+         echo
+      else
+         echo
+         echo "Zeenea Datacatalog is already stopped"
+         echo
+     fi
+
+}
+
+case "$1" in
+       'status')
+            Status_Zeenea
+            ;;
+       'start')
+            Start_Zeenea ; sleep 2 ;
+            Status_Zeenea
+            ;;
+       'stop')
+            Stop_Zeenea ;  sleep 2 ;
+            Status_Zeenea
+            ;;
+       'restart')
+            Stop_Zeenea ; echo "Sleeping..."; sleep  2 ;
+            Start_Zeenea ; sleep 2 ;
+            Status_Zeenea
+            ;;
+       *)
+            echo
+            echo "Usage: $0 { start | stop | restart | status }"
+            echo
+            exit 1
+            ;;
+esac
