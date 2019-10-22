@@ -107,4 +107,4 @@ Install Zeenea
 Author Information
 ------------------
 
-Toky Raobelina & Franck Vieira
+Franck Vieira
