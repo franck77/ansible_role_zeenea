@@ -61,7 +61,7 @@ role_zeenea_authentication_ldap_tls_protocol: "TLSv1"
 
 role_zeenea_authentication_ldap_tls_trust: "trusted"
 role_zeenea_authentication_ldap_tls_trutstore_type: "jks"
-role_zeenea_authentication_ldap_base_dn: "dc=haas,dc=socgen"
+role_zeenea_authentication_ldap_base_dn: "dc=my_compagny"
 
 role_zeenea_authentication_ldap_user_filter: "(&(objectclass=posixAccount)(uid={USERID}))"
 role_zeenea_authentication_ldap_user_uid: "uid"

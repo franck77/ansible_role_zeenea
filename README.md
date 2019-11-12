@@ -83,8 +83,6 @@ role_zeenea_orientdb_connection_password: Password to connect to Data base
 Playbook
 -----------
 
-Playbook name is playbook_zeenea, you can find it here : https://sgithub.fr.world.socgen/BigDataHub-I2T/playbook_zeenea.git
-
 It's a example playbook to install Zeenea in PROD/DEV/INT-F environment.
 
 Example Playbook

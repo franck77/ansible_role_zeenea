@@ -37,7 +37,7 @@ role_zeenea_java_path: "/applis/hadd/produits/java8/jdk1.8.0_112"
 ############################################## Path variables ############################################
 
 role_zeenea_install_dir: "{{ role_zeenea_home_dir }}/{{ role_zeenea_zeenea_version }}"
-role_zeenea_repo_host: "dhadlx04.dns21.socgen"
+role_zeenea_repo_host: ""
 role_zeenea_tarball_path: "http://{{ role_zeenea_repo_host }}/resources/binaries/zeenea/{{ role_zeenea_tarball_name }}"
 role_zeenea_zeenea_version: "19.04.1"
 role_zeenea_tarball_name: "zeenea-datacatalog-{{ role_zeenea_zeenea_version }}.tar.gz"
@@ -77,7 +77,7 @@ role_zeenea_authentication_local_defaultUser_login: "zeenea"
 role_zeenea_authentication_local_password_algorithm: "bcrypt"
 role_zeenea_authentication_local_password_bcrypt_rounds: "12"
 
-role_zeenea_authentication_ldap_bind_dn: "cn=bindzeenea,ou=Services,dc=haas,dc=socgen"
+role_zeenea_authentication_ldap_bind_dn: "cn=bindzeenea,ou=Services,dc=my_compagny"
 
 role_zeenea_authentication_ldap_tls_enable: "true"
 
@@ -89,7 +89,7 @@ role_zeenea_authentication_ldap_tls_protocol: "TLSv1"
 role_zeenea_authentication_ldap_tls_trust: "trusted" 
 role_zeenea_authentication_ldap_tls_trutstore_type: "jks"
 role_zeenea_authentication_ldap_tls_trutstore_path: "{{role_zeenea_install_dir}}/{{role_zeenea_zeenea_version}}/tls/{{role_zeenea_security_jks_truststore_name}}"
-role_zeenea_authentication_ldap_base_dn: "dc=haas,dc=socgen"
+role_zeenea_authentication_ldap_base_dn: "dc=my_compagny"
 #
 # User Information
 #  
@@ -109,9 +109,9 @@ role_zeenea_authentication_ldap_profile_default: "forbidden"
 role_zeenea_authentication_ldap_profile_group_enable: "true"
 role_zeenea_authentication_ldap_profile_group_filter: "(&(objectClass=posixGroup)(memberUid={USERID}))"
 role_zeenea_authentication_ldap_profile_group_matching_attribute: "DN" 
-role_zeenea_authentication_ldap_profile_group_superadmin: '["cn=zeenea_superadmin,ou=Groups,dc=haas,dc=socgen"]'
-role_zeenea_authentication_ldap_profile_group_admin: '["cn=zeenea_admin,ou=Groups,dc=haas,dc=socgen"]'
-role_zeenea_authentication_ldap_profile_group_user: '["cn=zeenea_user,ou=Groups,dc=haas,dc=socgen"]'
+role_zeenea_authentication_ldap_profile_group_superadmin: '["cn=zeenea_superadmin,ou=Groups,dc=my_compagny"]'
+role_zeenea_authentication_ldap_profile_group_admin: '["cn=zeenea_admin,ou=Groups,dc=my_compagny"]'
+role_zeenea_authentication_ldap_profile_group_user: '["cn=zeenea_user,ou=Groups,dc=my_compagny"]'
 
 ############### Encryption Configuration ###############
 role_zeenea_security_strong: "true"
